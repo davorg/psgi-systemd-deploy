@@ -1,18 +1,18 @@
 [Unit]
-Description=%WEBAPP_NAME%
+Description=${WEBAPP_NAME}
 After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=%WEBAPP_WORKDIR%
-EnvironmentFile=%WEBAPP_ENVFILE%
-ExecStart=%WEBAPP_CMD%
-User=%WEBAPP_USER%
-Group=%WEBAPP_GROUP%
+WorkingDirectory=${WEBAPP_WORKDIR}
+EnvironmentFile=${WEBAPP_ENVFILE}
+ExecStart=${WEBAPP_CMD}
+User=${WEBAPP_USER}
+Group=${WEBAPP_GROUP}
 Restart=on-failure
 
-StandardOutput=append:%WEBAPP_LOGDIR%/output.log
-StandardError=append:%WEBAPP_LOGDIR%/error.log
+StandardOutput=append:${WEBAPP_LOGDIR}/output.log
+StandardError=append:${WEBAPP_LOGDIR}/error.log
 
 [Install]
 WantedBy=multi-user.target

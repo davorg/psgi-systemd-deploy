@@ -56,7 +56,7 @@ for your PSGI apps.
    WEBAPP_WORKDIR=/path/to/your-app
    WEBAPP_ENVFILE=/path/to/your-app/.env
    WEBAPP_LOGDIR=/var/log/your-app
-   WEBAPP_SERVICE_NAME=your-app.service
+   WEBAPP_SERVICE_NAME=your-app
    WEBAPP_RUNNER=/usr/bin/starman
    WEBAPP_WORKER_COUNT=2
    WEBAPP_APP_PORT=5000

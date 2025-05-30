@@ -30,6 +30,8 @@ ENV_FILE="${ENV_FILE:-.deploy.env}"
 if [[ -f "$ENV_FILE" ]]; then 
   echo "Processing '$ENV_FILE'"
   source "$ENV_FILE"
+  export WEBAPP_NAME WEBAPP_DESC WEBAPP_USER WEBAPP_GROUP WEBAPP_WORKDIR \
+         WEBAPP_ENVFILE WEBAPP_LOGDIR WEBAPP_SERVICE_NAME WEBAPP_CMD
 else
   echo "Error: Environment file '$ENV_FILE' not found."
   exit 1

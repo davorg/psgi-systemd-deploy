@@ -1,87 +1,131 @@
-# psgi-systemd-deploy
+# 📦 PSGI Systemd Deploy
 
-A generic deployment framework for running Perl/PSGI web applications as
-`systemd` services.
+A utility to streamline the deployment of PSGI applications using `systemd`.
+This tool automates the creation and management of `systemd` service files
+for your PSGI apps.
 
-This repository provides:
+## 🔧 Features
 
-- A reusable `systemd` service template
-- A simple deploy script
-- An example environment configuration file
+- **Dynamic Service File Generation**: Automatically generates `systemd`
+  service files using environment variables.
+- **Customizable Deployment**: Configure service parameters via `.deploy.env`.
+- **Dry-Run Mode**: Preview the generated service file without applying
+  changes.
+- **Flexible Runner Support**: Specify different PSGI runners (e.g., `starman`,
+  `plackup`).
+- **Environment Variable Expansion**: Supports dynamic values within `.env`
+  files.
 
-It’s designed to help you run multiple PSGI-based apps with clean startup,
-logging, and automatic boot-time launching — without hardcoding anything per
-project.
+## 📄 Prerequisites
 
----
+- A PSGI application with a `bin/app.psgi` entry point.
+- `systemd` installed on the deployment server.
+- Bash shell environment.
 
-## 🚀 Features
+## 🚀 Quick Start
 
-- Automatic `.service` file generation from environment variables
-- Autostart on boot with `systemctl enable`
-- Centralised logs using `journalctl` or traditional log files
-- Easy integration into existing PSGI app deployments
-
----
-
-## 📦 Usage
-
-1. Clone or download this repository:
+1. **Clone the Repository**:
 
    ```bash
    git clone https://github.com/davorg/psgi-systemd-deploy.git
-   cd psgi-systemd-deploy
+   ```
 
-2. In your PSGI application directory, create a `.deploy.env` file with   
-   environment-specific values. You can start with the provided example:
+2. **Prepare Your Application Directory**:
+
+   Ensure your PSGI application resides in a directory with the following
+   structure:
+
+   ```
+   your-app/
+   ├── bin/
+   │   └── app.psgi
+   ├── .env
+   └── .deploy.env
+   ```
+
+3. **Configure `.deploy.env`**:
+
+   Create a `.deploy.env` file in your application directory with the necessary
+   environment variables:
+
+   ```ini
+   WEBAPP_NAME=your_app_name
+   WEBAPP_DESC="Your App Description"
+   WEBAPP_USER=your_user
+   WEBAPP_GROUP=your_group
+   WEBAPP_WORKDIR=/path/to/your-app
+   WEBAPP_ENVFILE=/path/to/your-app/.env
+   WEBAPP_LOGDIR=/var/log/your-app
+   WEBAPP_SERVICE_NAME=your-app.service
+   WEBAPP_RUNNER=/usr/bin/starman
+   WEBAPP_WORKER_COUNT=2
+   WEBAPP_APP_PORT=5000
+   WEBAPP_APP_PRELOAD=1
+   ```
+
+   *Note*: Adjust the values to match your application's requirements.
+
+4. **Configure `.env`**:
+
+   Define any runtime environment variables your application needs in the
+   `.env` file:
+
+   ```ini
+   export SOME_ENV_VAR=some_value
+   ```
+
+5. **Deploy the Service**:
+
+   Navigate to your application directory and run the deployment script:
 
    ```bash
-   cp example/.deploy.env.example /path/to/your/app/.deploy.env
+   ../psgi-systemd-deploy/deploy.sh
+   ```
 
-3. Run the deployment script with the path to your app's `.deploy.env`:
+   To perform a dry run and preview the generated service file:
 
    ```bash
-   ./deploy.sh /path/to/your/app/.deploy.env
+   ../psgi-systemd-deploy/deploy.sh --dry-run
+   ```
 
-This will:
+## 🛠️ Script Details
 
-* Generate a `.service` file from the template
-* Install it to `/etc/systemd/system`
-* Reload `systemd` configuration
-* Enable the service to start on boot
-* Start the service immediately
+The `deploy.sh` script performs the following actions:
 
-## 📄 Files
+- Loads environment variables from `.deploy.env`.
+- Constructs the `ExecStart` command dynamically based on provided variables.
+- Generates a `systemd` service file using a template.
+- Installs the service file to `/etc/systemd/system/`.
+- Reloads the `systemd` daemon.
+- Enables and restarts the service.
 
-* `webapp.service.template` – The generic systemd service unit file with
-  placeholders
-* `deploy.sh` – The deployment script that renders and installs the service
-* `example/.deploy.env.example` – A sample environment file with placeholder
-  values
+## 📝 Template Customization
 
-## 🛠 Requirements
+The `webapp.service.template` file defines the structure of the generated
+service file. It utilizes placeholders that are replaced with actual values
+from `.deploy.env`. You can customize this template to suit specific
+requirements.
 
-* `systemd` (Linux)
-* `envsubst` (usually available via gettext)
-* Your app should use a `.env` file and be launchable via Starman or similar
+## 📌 Notes
 
-## 🧪 Example .deploy.env
+- Ensure that the user specified in `WEBAPP_USER` has the necessary permissions
+  to run the application.
+- The `WEBAPP_RUNNER` can be any PSGI-compatible server, such as `plackup` or
+  `Twiggy`.
+- Log files are directed to `WEBAPP_LOGDIR`. Ensure this directory exists and
+  is writable by `WEBAPP_USER`.
 
-    WEBAPP_NAME=My PSGI Web App
-    WEBAPP_DESC=An example web application using PSGI and systemd
-    WEBAPP_USER=www-data
-    WEBAPP_GROUP=www-data
-    WEBAPP_WORKDIR=/opt/myapp
-    WEBAPP_ENVFILE=/opt/myapp/.env
-    WEBAPP_LOGDIR=/var/log/myapp
-    WEBAPP_SERVICE_NAME=myapp
-    WEBAPP_CMD="/usr/bin/starman --workers=\${MYAPP_WORKERS:-2} -l :\${MYAPP_PORT:-5000} /opt/myapp/bin/app.psgi"
+## 🤝 Contributing
 
-## 📚 License
+Contributions are welcome! Please fork the repository and submit a pull
+request with your enhancements.
 
-MIT License
+## 📄 License
+
+This project is licensed under the MIT License.
 
 ## 👤 Author
 
 Created by Dave Cross (dave@davecross.co.uk), because `systemd` shouldn't be
 scary and Perl shouldn't be left behind.
+

@@ -61,12 +61,13 @@ if $DRY_RUN; then
   echo "------------------------------------"
   echo "No changes made to system."
 else
-  SERVICE_PATH="$SERVICE_FILE/${WEBAPP_NAME}.service"
+  : "${WEBAPP_SERVICE_NAME:?WEBAPP_SERVICE_NAME must be set in .deploy.env}"
+  SERVICE_PATH="$SERVICE_FILE/${WEBAPP_SERVICE_NAME}.service"
   echo "$RENDERED_CONTENT" > "$SERVICE_PATH"
   systemctl daemon-reexec
   systemctl daemon-reload
-  systemctl enable "${WEBAPP_NAME}.service"
-  systemctl restart "${WEBAPP_NAME}.service"
-  echo "Service '${WEBAPP_NAME}' deployed and restarted."
+  systemctl enable "${WEBAPP_SERVICE_NAME}.service"
+  systemctl restart "${WEBAPP_SERVICE_NAME}.service"
+  echo "Service '${WEBAPP_SERVICE_NAME}' deployed and restarted."
 fi
 

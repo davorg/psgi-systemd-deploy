@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=${WEBAPP_WORKDIR}
-EnvironmentFile=${WEBAPP_ENVFILE}
+$WEBAPP_ENVIRONMENT_LINE
 ExecStart=${WEBAPP_CMD}
 User=${WEBAPP_USER}
 Group=${WEBAPP_GROUP}

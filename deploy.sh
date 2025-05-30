@@ -45,6 +45,13 @@ WEBAPP_CMD+=" $WEBAPP_WORKDIR/bin/app.psgi"
 
 export WEBAPP_CMD
 
+# Optional .env file support
+ENVIRONMENT_LINE=""
+if [[ -f "$WEBAPP_WORKDIR/.env" ]]; then
+  ENVIRONMENT_LINE="EnvironmentFile=$WEBAPP_WORKDIR/.env"
+fi
+export WEBAPP_ENVIRONMENT_LINE="$ENVIRONMENT_LINE"
+
 # Ensure all WEBAPP_* variables are exported for envsubst
 for var in $(compgen -v | grep ^WEBAPP_); do
   export "$var"

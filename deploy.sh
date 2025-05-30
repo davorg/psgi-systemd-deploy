@@ -27,12 +27,13 @@ done
 # Default to .deploy.env in current directory if not set
 ENV_FILE="${ENV_FILE:-.deploy.env}"
 
-if [[ ! -f "$ENV_FILE" ]]; then
+if [[ -f "$ENV_FILE" ]]; then 
+  echo "Processing '$ENV_FILE'"
+  source "$ENV_FILE"
+else
   echo "Error: Environment file '$ENV_FILE' not found."
   exit 1
 fi
-
-source "$ENV_FILE"
 
 SERVICE_FILE="/tmp/${WEBAPP_SERVICE_NAME}.service"
 envsubst < "$SCRIPT_DIR/webapp.service.template" > "$SERVICE_FILE"

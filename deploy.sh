@@ -41,7 +41,7 @@ if [[ "$WEBAPP_APP_PRELOAD" == "1" ]]; then
   WEBAPP_CMD+=" --preload-app"
 fi
 
-WEBAPP_CMD+=" $WEBAPP_WORKDIR/bin/app.psgi"
+WEBAPP_CMD+=" ${WEBAPP_APP:-$WEBAPP_WORKDIR/bin/app.psgi}"
 
 export WEBAPP_CMD
 
